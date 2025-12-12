@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить категорию{% endblock %}
+
+{% block content %}
+<h2>Добавить новую категорию</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <p><label>Название категории:</label><br>
+    {{ form.name }}</p>
+    
+    <p><label>Описание:</label><br>
+    {{ form.description }}</p>
+    
+    <button type="submit">Сохранить</button>
+    <a href="{% url 'add_product' %}">Отмена</a>
+</form>
+
+<p><a href="{% url 'add_product' %}">← Вернуться к добавлению товара</a></p>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить товар{% endblock %}
+
+{% block content %}
+<h2>Добавить новый товар</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <p><label>Название:</label><br>
+    {{ form.name }}</p>
+    
+    <p><label>Описание:</label><br>
+    {{ form.description }}</p>
+    
+    <p><label>Цена:</label><br>
+    {{ form.price }}</p>
+    
+    <p><label>Изображение:</label><br>
+    {{ form.image }}</p>
+    
+    <p><label>Категория:</label><br>
+    {{ form.category }}</p>
+    
+    <p><label>Теги:</label><br>
+    {{ form.tags }}</p>
+    
+    <button type="submit">Сохранить</button>
+    <a href="{% url 'product_list' %}">Отмена</a>
+</form>
+
+<p>
+    <a href="{% url 'add_category' %}">Добавить новую категорию</a> |
+    <a href="{% url 'add_tag' %}">Добавить новый тег</a>
+</p>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Каталог товаров
+{% if request.GET.category %}
+    | Категория: {{ category_name }}
+{% elif request.GET.tag %}
+    | Тег: {{ tag_name }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h2>Фильтрация товаров</h2>
+
+<div>
+    <h3>Фильтр по категориям:</h3>
+    <p>
+        <a href="{% url 'product_list' %}">Все категории</a>
+        {% for category in categories %}
+        | <a href="{% url 'product_list' %}?category={{ category.id }}">{{ category.name }}</a>
+        {% endfor %}
+    </p>
+</div>
+
+<div>
+    <h3>Фильтр по тегам:</h3>
+    <p>
+        <a href="{% url 'product_list' %}">Все теги</a>
+        {% for tag in tags %}
+        | <a href="{% url 'product_list' %}?tag={{ tag.id }}">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+</div>
+
+<hr>
+
+<h2>Список товаров</h2>
+<p>Найдено товаров: <strong>{{ products|length }}</strong></p>
+
+{% if products %}
+    {% for product in products %}
+    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px 0;">
+        <h3>
+            <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+            <span style="float: right; color: green;">{{ product.price }} руб.</span>
+        </h3>
+
+        {% if product.image %}
+        <p>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200" height="150">
+        </p>
+        {% endif %}
+
+        <p><strong>Описание:</strong> {{ product.description|truncatechars:150 }}</p>
+
+        <p>
+            <strong>Категория:</strong>
+            <a href="{% url 'product_list' %}?category={{ product.category.id }}">
+                {{ product.category.name }}
+            </a>
+        </p>
+
+        {% if product.tags.all %}
+        <p>
+            <strong>Теги:</strong>
+            {% for tag in product.tags.all %}
+            <a href="{% url 'product_list' %}?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+
+        <p>
+            <small>
+                Добавлен: {{ product.created_at|date:"d.m.Y H:i" }} |
+                Обновлен: {{ product.updated_at|date:"d.m.Y H:i" }}
+            </small>
+        </p>
+
+        <p>
+            <a href="{% url 'product_detail' product.id %}">Подробнее →</a>
+        </p>
+    </div>
+    {% endfor %}
+{% else %}
+    <div style="text-align: center; padding: 50px;">
+        <h3>Товары не найдены</h3>
+        <p>Попробуйте изменить параметры фильтрации</p>
+        <p><a href="{% url 'product_list' %}">Показать все товары</a></p>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ product.name }}</h2>
+
+<p><a href="{% url 'product_list' %}">← Назад к каталогу</a></p>
+
+{% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="300">
+{% endif %}
+
+<p><strong>Описание:</strong> {{ product.description }}</p>
+<p><strong>Цена:</strong> {{ product.price }} руб.</p>
+<p><strong>Категория:</strong> {{ product.category.name }}</p>
+
+<p><strong>Теги:</strong>
+    {% for tag in product.tags.all %}
+        <a href="{% url 'product_list' %}?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+        нет тегов
+    {% endfor %}
+</p>
+
+<p><small>Создан: {{ product.created_at|date:"d.m.Y H:i" }} | Обновлен: {{ product.updated_at|date:"d.m.Y H:i" }}</small></p>
+
+<hr>
+
+{% if related_products %}
+    <h3>Похожие товары:</h3>
+    <ul>
+    {% for related in related_products %}
+        <li>
+            <a href="{% url 'product_detail' related.id %}">{{ related.name }}</a> - {{ related.price }} руб.
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
